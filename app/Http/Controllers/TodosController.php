@@ -4,8 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Todo;
 use Illuminate\Http\Request;
+use App\Services\TodosService;
 
 class TodosController extends Controller{
+
+  private $todoService;
+
+   public function __construct(TodosService $todoService){
+     $this->todosService = $todoService;
+   }
 
 
 
@@ -14,10 +21,11 @@ class TodosController extends Controller{
    *
    * @return \Illuminate\Http\Response
    */
-  public function index(){
-    $todos = Todo::all();
-
-		return view('todos.index', ['todos' => $todos]);
+  public function index(Request $request){
+    if ($request->wantsJson()){
+    return $this->todosService->all();
+   }
+    return view('todos.index');
   }
 
 
@@ -43,7 +51,7 @@ class TodosController extends Controller{
 
 		Todo::create($data);
 
-		return redirect()->route('todos.index');
+		return response()->json('Stored');
   }
 
   /**
@@ -52,9 +60,14 @@ class TodosController extends Controller{
    * @param  \App\Todo  $todo
    * @return \Illuminate\Http\Response
    */
-  public function show(Todo $todo)
-  {
-      //
+  public function complete(Request $request, Todo $todo){
+
+    $data = $request;
+
+    $todo->completed = $data['completed'];
+    $todo->save();
+
+    return response()->json('Completed');
   }
 
   /**
@@ -64,7 +77,6 @@ class TodosController extends Controller{
    * @return \Illuminate\Http\Response
    */
   public function edit(Todo $todo){
-    return view('todos.edit', ['todo' => $todo]);
   }
 
   /**
@@ -82,7 +94,7 @@ class TodosController extends Controller{
 		$todo->title = $data['title'];
 		$todo->save();
 
-		return redirect()->route('todos.index');
+		return response()->json('Updated');
   }
 
   /**
@@ -93,7 +105,7 @@ class TodosController extends Controller{
    */
   public function destroy(Todo $todo){
     $todo->delete();
-		
-		return redirect()->route('todos.index');
+
+		return response()->json('deleted');
   }
 }

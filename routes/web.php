@@ -21,5 +21,6 @@ Route::post('todos', 'TodosController@store')->name('todos.store');
 
 
 Route::get('todos/{todo}/edit', 'TodosController@edit')->name('todos.edit');
-Route::put('todos/{todo}/update', 'TodosController@update')->name('todos.update');
+Route::put('todos/{todo}', 'TodosController@update')->name('todos.update');
+Route::put('todos/{todo}/complete', 'TodosController@complete')->name('todos.complete');
 Route::delete('todos/{todo}', 'TodosController@destroy')->name('todos.delete');

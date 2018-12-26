@@ -13,11 +13,14 @@
 	</head>
 	<body>
 
+	<div id="app">
 		<div class="container-fluid">
 			@yield('master')
 		</div>
+	</div>
 
 	  <!-- Scripts -->
 	  <script src="{{ asset('js/app.js') }}"></script>
+		
 	</body>
 </html>

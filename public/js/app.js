@@ -13943,7 +13943,7 @@ window.Vue = __webpack_require__(36);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(39));
+Vue.component('todos-component', __webpack_require__(39));
 
 var app = new Vue({
   el: '#app'
@@ -47246,7 +47246,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/ExampleComponent.vue"
+Component.options.__file = "resources/assets/js/components/TodosComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -47255,9 +47255,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7168fb6a", Component.options)
+    hotAPI.createRecord("data-v-852556f2", Component.options)
   } else {
-    hotAPI.reload("data-v-7168fb6a", Component.options)
+    hotAPI.reload("data-v-852556f2", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -47398,11 +47398,105 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
+  data: function data() {
+    return {
+      todos: [],
+      editedTodo: null,
+      todo: {
+        id: '',
+        title: '',
+        completed: ''
+      },
+      edit: false
+    };
+  },
+  mounted: function mounted() {
+    this.getTask();
+  },
+
+  methods: {
+    getTask: function getTask() {
+      var _this = this;
+
+      axios.get('/todos').then(function (_ref) {
+        var data = _ref.data;
+
+        _this.todos = data;
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    },
+    addTask: function addTask() {
+      var _this2 = this;
+
+      if (this.edit === false) {
+        axios.post('/todos', this.todo).then(function (_ref2) {
+          var data = _ref2.data;
+
+          _this2.todo.title = '';
+          _this2.edit = false;
+          _this2.getTask();
+        }).catch(function (err) {
+          return console.error(err);
+        });
+      } else {
+        axios.put('/todos/' + this.todo.id, {
+          title: this.todo.title
+        }).then(function (res) {
+          _this2.todo.title = '';
+          _this2.edit = false;
+          _this2.getTask();
+        }).catch(function (err) {
+          return console.error(err);
+        });
+      }
+    },
+    deleteTask: function deleteTask(id) {
+      var _this3 = this;
+
+      axios.delete('/todos/' + id).then(function (response) {
+        _this3.getTask();
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    },
+    editTask: function editTask(todo) {
+      this.edit = true;
+      this.todo.id = todo.id;
+      this.todo.title = todo.title;
+      this.todo.completed = todo.completed;
+    },
+    completeTask: function completeTask(todo) {
+      var _this4 = this;
+
+      axios.put('/todos/' + todo.id + '/complete', {
+        completed: !todo.completed
+      }).then(function (res) {
+        _this4.getTask();
+      }).catch(function (err) {
+        return console.error(err);
+      });
     }
+  }
 });
 
 /***/ }),
@@ -47413,38 +47507,134 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-6 mx-auto" }, [
+          _c("h1", { staticClass: "todos-title" }, [_vm._v("Todos")]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  _vm.addTask()
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.todo.title,
+                      expression: "todo.title"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    placeholder: "What needs to be done?"
+                  },
+                  domProps: { value: _vm.todo.title },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.todo, "title", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "todos-wrapper" }, [
+            _c(
+              "ul",
+              { staticClass: "list-group todos-list" },
+              _vm._l(_vm.todos, function(todo) {
+                return _c(
+                  "li",
+                  { staticClass: "list-group-item todos-list-item" },
+                  [
+                    todo.completed
+                      ? _c("strike", [
+                          _c(
+                            "a",
+                            {
+                              on: {
+                                dblclick: function($event) {
+                                  $event.preventDefault()
+                                  _vm.editTask(todo)
+                                }
+                              }
+                            },
+                            [_vm._v(_vm._s(todo.title))]
+                          )
+                        ])
+                      : _c(
+                          "a",
+                          {
+                            on: {
+                              dblclick: function($event) {
+                                $event.preventDefault()
+                                _vm.editTask(todo)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(todo.title))]
+                        ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-xs pull-right",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.deleteTask(todo.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Delete")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-xs pull-right",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.completeTask(todo)
+                          }
+                        }
+                      },
+                      [_vm._v("Done")]
+                    )
+                  ],
+                  1
+                )
+              })
+            )
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7168fb6a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-852556f2", module.exports)
   }
 }
 
