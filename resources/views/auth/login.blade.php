@@ -21,4 +21,6 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   {!! Form::close() !!}
 
+  <a class="btn btn-danger" href="{{route("signup.show")}}" role="button">Sign Up</a>
+
 @endsection

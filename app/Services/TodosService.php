@@ -8,7 +8,7 @@ class TodosService extends TransformerService{
 
   public function all(){
 
-    $todos = Todo::all();
+    $todos = Todo::where("user_id", current_user()->id)->get();
 
     return response()->json($this->transformCollection($todos));
   }
@@ -38,7 +38,10 @@ class TodosService extends TransformerService{
       'title' => 'required|string|max:15',
     ]);
 
-    Todo::create($data);
+    Todo::create([
+      'title' => $data["title"],
+      'user_id' => current_user()->id
+     ]);
 
     return response()->json('Stored');
   }
