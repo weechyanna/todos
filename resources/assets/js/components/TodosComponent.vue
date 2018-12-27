@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6 mx-auto">
-          <h1 class="todos-title">Todos</h1>
+          <h1 class="todos-title">Tasks</h1>
 
           <form @submit.prevent="addTask()">
             <div class="form-group">
