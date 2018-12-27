@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function (){
   Route::put('todos/{todo}', 'TodosController@update')->name('todos.update');
   Route::put('todos/{todo}/complete', 'TodosController@complete')->name('todos.complete');
   Route::delete('todos/{todo}', 'TodosController@destroy')->name('todos.delete');
+  Route::get('logout', 'AuthController@logout')->name('logout');
 });
 
 Route::middleware('guest')->group(function(){
