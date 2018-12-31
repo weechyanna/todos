@@ -8,7 +8,7 @@
 
           <form @submit.prevent="addTask()">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="What needs to be done?" v-model="todo.title">
+                <input type="text" name="title" class="form-control" placeholder="What needs to be done?" v-model="todo.title">
             </div>
           </form>
 
